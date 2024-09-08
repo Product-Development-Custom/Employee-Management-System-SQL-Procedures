@@ -37,9 +37,10 @@ namespace test
 
         private void Managerc()
         {
-            string pos = "Manager";
-            string sql = "select Count(*) from Employee where position='" + pos + "'";
-            SqlDataAdapter da = new SqlDataAdapter(sql, Class1.cn);
+            SqlCommand cmd = new SqlCommand("CustomFetch", Class1.cn);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@Action", "SELECT_MANAGER");
+            SqlDataAdapter da = new SqlDataAdapter(cmd);
             DataTable dt = new DataTable();
             da.Fill(dt);
             manalb.Text = dt.Rows[0][0].ToString();
@@ -58,8 +59,10 @@ namespace test
 
         private void Bonussum()
         {
-            string sql = "select Sum(bonus) from salary";
-            SqlDataAdapter da = new SqlDataAdapter(sql, Class1.cn);
+            SqlCommand cmd = new SqlCommand("SalaryRecords", Class1.cn);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@Action", "SUM_SALARY");
+            SqlDataAdapter da = new SqlDataAdapter(cmd);
             DataTable dt = new DataTable();
             da.Fill(dt);
             bonlb.Text = dt.Rows[0][0].ToString();

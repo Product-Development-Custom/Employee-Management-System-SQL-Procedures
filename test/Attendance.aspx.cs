@@ -36,8 +36,10 @@ namespace test
         }
         private void showid()
         {
-            string sql = "select id,fname + ' ' + lname as fullname from Employee";
-            SqlDataAdapter da = new SqlDataAdapter(sql, Class1.cn);
+            SqlCommand cmd = new SqlCommand("CustomFetch", Class1.cn);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@Action", "SELECT_ID");
+            SqlDataAdapter da = new SqlDataAdapter(cmd);
             DataTable dt = new DataTable();
             da.Fill(dt);
             empid.DataSource = dt;

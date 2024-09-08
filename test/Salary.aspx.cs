@@ -18,10 +18,10 @@ namespace test
         protected void Page_Load(object sender, EventArgs e)
         {
 
-            //if (Session["id"] == null)
-            //{
-            //    Response.Redirect("Login.aspx");
-            //}
+            if (Session["id"] == null)
+            {
+                Response.Redirect("Login.aspx");
+            }
             if (!Page.IsPostBack)
             {
                 showid();
@@ -50,8 +50,10 @@ namespace test
 
         private void showid()
         {
-            string sql = "select id,salary,fname + ' ' + lname as fullname from Employee";
-            SqlDataAdapter da = new SqlDataAdapter(sql, Class1.cn);
+            SqlCommand cmd = new SqlCommand("CustomFetch", Class1.cn);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@Action", "SELECT_ID");
+            SqlDataAdapter da = new SqlDataAdapter(cmd);
             DataTable dt = new DataTable();
             da.Fill(dt);
             empid.DataSource = dt;
@@ -63,24 +65,25 @@ namespace test
 
         private void showsalary()
         {
-
-            string sql = "select salary from employee where id='" + empid.SelectedItem.Text + "'";
-            SqlDataAdapter da = new SqlDataAdapter(sql, Class1.cn);
+            SqlCommand cmd = new SqlCommand("CustomFetch", Class1.cn);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@Action", "SELECT_SALARY");
+            cmd.Parameters.AddWithValue("@empid", empid.SelectedItem.Text);
+            SqlDataAdapter da = new SqlDataAdapter(cmd);
             DataTable dt = new DataTable();
             da.Fill(dt);
-
             foreach (DataRow dr in dt.Rows)
             {
                 empsalary.Text = dr["salary"].ToString();
-
             }
-
         }
 
         private void showbonus()
         {
-            string sql = "select bname,bamount from bonus";
-            SqlDataAdapter da = new SqlDataAdapter(sql, Class1.cn);
+            SqlCommand cmd = new SqlCommand("CustomFetch", Class1.cn);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@Action", "SELECT_NAME_AMOUNT");
+            SqlDataAdapter da = new SqlDataAdapter(cmd);
             DataTable dt = new DataTable();
             da.Fill(dt);
             bonus.DataSource = dt;
@@ -121,8 +124,10 @@ namespace test
 
         private void showattendance()
         {
-            string sql = "select empname from attendance";
-            SqlDataAdapter da = new SqlDataAdapter(sql, Class1.cn);
+            SqlCommand cmd = new SqlCommand("CustomFetch", Class1.cn);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@Action", "SELECT_EMPNAME");
+            SqlDataAdapter da = new SqlDataAdapter(cmd);
             DataTable dt = new DataTable();
             da.Fill(dt);
             attendanceid.DataSource = dt;
@@ -133,9 +138,11 @@ namespace test
 
         private void showday()
         {
-
-            string sql = "select * from attendance where empname='" + attendanceid.SelectedItem.Text + "'";
-            SqlDataAdapter da = new SqlDataAdapter(sql, Class1.cn);
+            SqlCommand cmd = new SqlCommand("CustomFetch", Class1.cn);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@Action", "SELECT_DAYS");
+            cmd.Parameters.AddWithValue("@empname", attendanceid.SelectedItem.Text);
+            SqlDataAdapter da = new SqlDataAdapter(cmd);
             DataTable dt = new DataTable();
             da.Fill(dt);
             foreach (DataRow dr in dt.Rows)
